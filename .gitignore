@@ -1,0 +1,11 @@
+node_modules/
+
+TRASH/
+
+de-iot-documentation.docx
+
+Main.txt
+
+test/
+
+*.env
