@@ -96,7 +96,7 @@ GeoLocation/
 
 ## ✨ Credits
 
-- Project by: **Vivek Kanjariya**,**Pratham Madhu**,**Nakum Dhruv**,**Xitij Maheta**
+- Project by: **Vivek Kanjariya**,   **Pratham Madhu**,   **Nakum Dhruv**,   **Xitij Maheta**
 - Microcontroller logic, hardware design, and power systems built from scratch.
 - Doesn't Includes any Bootstrap and Copyrights.
 
