@@ -1,0 +1,447 @@
+#Conditional-loader {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #2b55ff;
+    border: 1px solid #417dff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #Conditional-loader input[type="checkbox"] {
+    margin: 10px;
+    display: block;
+  }
+  
+  #Conditional-loader label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  #Conditional-loader input[type="checkbox"] + label {
+    display: block;
+    margin-left: 10px;
+  }
+  
+  #Render {
+    display: none;
+    margin-top: 20px;
+  }
+  
+  #Conditional-loader input[type="checkbox"]:checked ~ #Render {
+    display: block;
+  }
+  
+  #Render input[type="text"] {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #2b55ff;
+    border-radius: 5px;
+    font-size: 18px;
+  }
+  
+  #Render input[type="button"] {
+    width: 100%;
+    height: 40px;
+    background-color: #2b55ff;
+    color: #00114a;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  
+  #Render input[type="button"]:hover {
+    background-color: rgb(67, 108, 255);
+  }
+  
+  /* Add some media queries to make it responsive */
+  @media (max-width: 768px) {
+    #Conditional-loader {
+      margin: 20px auto;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    #Conditional-loader {
+      margin: 10px auto;
+    }
+    #Render input[type="text"] {
+      height: 30px;
+    }
+    #Render input[type="button"] {
+      height: 30px;
+    }
+  }
+
+    :root {
+  --primary: #ff9e1f;  /* Bright blue accent */
+  --accent: #ff4e2f;   /* Red accent */
+  --bg: #121212; /* Deep dark background */
+  --panel-bg: rgba(0, 0, 0, 0.7);  /* Dark panel background */
+  --text-color: #e0e0e0; /* Light grey text color for better readability */
+  --text-muted: #aaaaaa; /* Muted grey text */
+  --border-radius: 10px;
+  --map-color: #003366; /* Deep blue for map */
+  --shadow: rgba(0, 0, 0, 0.75); /* Soft shadow */
+  --yellow: #ff0000d3; /* Yellow for highlights */
+
+}
+
+/* Hide Leaflet zoom controls */
+.leaflet-control-zoom {
+  display: none !important;
+}
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-color);
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+/* Map Styling */
+#map {
+  flex: 3;
+  height: 100vh;
+  background-color: var(--map-color); /* Deep blue background */
+  box-shadow: 0 4px 12px var(--shadow);
+  transition: all 0.3s ease;
+}
+
+/* AI Description Panel */
+#ai-description {
+  flex: 2;
+  padding: 0rem 1.8rem;
+  background:#001932;
+  overflow-y: auto;
+  box-shadow: -3px 0 12px var(--shadow);
+  /* display: flex; */
+  flex-direction: column;
+  overflow-x: hidden;
+  color: var(--text-color);
+}
+
+pre {
+  display: flex;
+  flex-direction: column;
+  /* overflow-y: scroll; */
+  overflow-x: hidden; /* hide horizontal scroll */
+  white-space: pre-wrap; /* wraps long lines */
+  word-break: break-word; /* breaks very long words */
+}
+
+#ai-description h2 {
+  /* font-family: Impact, Charcoal, sans-serif; */
+
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+font-size: 38px;
+letter-spacing: 0.3rem;
+word-spacing: -3.2px;
+color: #ffffff;
+font-weight: 400;
+text-decoration: none solid rgb(68, 68, 68);
+font-style: normal;
+font-variant: small-caps;
+text-transform: none;
+}
+
+#ai-description p, #ai-description pre {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 17px;
+/* letter-spacing: 1px; */
+word-spacing: -1.8px;
+color: #ffffff;
+font-weight: 100;
+text-decoration: none solid rgb(68, 68, 68);
+font-style: normal;
+font-variant: small-caps;
+text-transform: none;
+}
+
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+.leaflet-popup-content-wrapper {
+  background-color: var(--panel-bg);
+  /* border-radius: 12px; */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+  color: var(--text-color);
+}
+
+.leaflet-control-zoom {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50px;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Hover Effects for Buttons and Elements */
+.leaflet-control-zoom button:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s;
+  /* background-color: var(--primary); */
+  color: rgb(35, 8, 135);
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  body {
+    flex-direction: column;
+  }
+
+  #map {
+    width: 100%;
+    z-index: 200;
+  }
+
+  #ai-description {
+    height: 30%;
+    bottom: 0;
+    border-radius: 12px;
+  }
+
+  #ai-description h2 {
+    /* padding: 0px; */
+    /* margin: 0px; */
+    /* margin-top: 20px; */
+    margin-bottom: 10px;
+    text-align: left;
+    font-size: 3.rem;
+    letter-spacing: normal;
+  }
+
+  #ai-description p, #ai-description pre {
+    overflow-wrap: anywhere;
+    font-size: 1.1rem;
+    margin-left: 9px;
+  } 
+  a{
+    margin-left: 8px;
+  }
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  color: var(--accent);
+}
+
+#ai-description a {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  /* margin-bottom: 2rem; */
+  padding: 10px 16px;
+  background-color: var(--primary);
+  color: white;
+  text-align: center;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 100;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  display: inline-block;
+}
+
+/* smoother Overlays for Naksho buffering  */
+
+/* Add this to your <style> section */
+  #loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #121212; /* Match theme */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+
+.spinner {
+  border: 6px solid rgba(255, 255, 255, 0.1);
+  border-top: 6px solid var(--primary);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+/* From Uiverse.io by Gautammsharma */ 
+.material-checkbox {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #ffa51e;
+  cursor: pointer;
+}
+
+.material-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkmark {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  border: 2px solid #454B00;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.material-checkbox input[type="checkbox"]:checked ~ .checkmark {
+  background-color: #fe9123;
+  border-color: #dd9518;
+}
+
+.material-checkbox input[type="checkbox"]:checked ~ .checkmark:after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 4px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.material-checkbox input[type="checkbox"]:focus ~ .checkmark {
+  box-shadow: 0 0 0 2px #ffe017e6;
+}
+
+.material-checkbox:hover input[type="checkbox"] ~ .checkmark {
+  border-color: #ff9500;
+}
+
+.material-checkbox input[type="checkbox"]:disabled ~ .checkmark {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.material-checkbox input[type="checkbox"]:disabled ~ .checkmark:hover {
+  border-color: #4d4d4d;
+}
+
+/* <form id="gpsForm">
+  <label>Latitude: <input type="number" step="any" id="lat" required></label><br>
+  <label>Longitude: <input type="number" step="any" id="lon" required></label><br>
+  <button id="CoodSubmitButton" type="submit">Send GPS Data</button>
+</form> */
+
+form{
+  padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+#lat ,#lon{
+  display: block;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #ff9a03;
+  padding: 10px;
+  color: #fff;
+  font-size: 16px;
+  width: 100%;
+}
+
+input{
+  padding-top: 10px;
+  margin: 10px;
+}
+
+/* input[type="number"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+} */
+
+
+input[type="number"]{
+  outline: none;
+  box-shadow: none;
+  border: none;
+}
+
+#CoodSubmitButton{
+  width: 100%;
+  background-color: #fe9123;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+#CoodSubmitButton:hover{
+  background-color: #ff9500;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px; /* vertical scrollbar width */
+  height: 8px; /* horizontal scrollbar height */
+}
+
+::-webkit-scrollbar-track {
+  background: #0a1a2f; /* Track background */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ff9900; /* Scrollbar handle */
+  border-radius: 10px;
+  border: 2px solid #0a1a2f; /* Gives spacing inside track */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #ffaa33;
+}

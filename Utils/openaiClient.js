@@ -1,8 +1,20 @@
 const { OpenAI } = require("openai");
 const fetch = require('node-fetch');
+const { gpsEmitter } = require("../routes/gps.js");
 require('dotenv').config();
 
-// 🧠 OpenRouter + OpenAI setup
+// 📡 Listening to GPS Coordinates
+gpsEmitter.on('coordinatesUpdated', async (coordinates) => {
+  console.log("Received coordinates:", coordinates);
+  try {
+    const result = await getWaterbodyDescription(coordinates);
+    console.log("🌊 Waterbody Info:", result);
+  } catch (error) {
+    console.error('Error fetching waterbody description:', error.message);
+  }
+});
+
+// 🚀 OpenRouter + OpenAI setup
 const openai = new OpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
   apiKey: process.env.OPENAI_API_KEY,
@@ -22,36 +34,26 @@ async function reverseGeocode(lat, lon) {
   };
 }
 
-// 🧠 AI-Powered Waterbody Description using GPS coordinates
+// AI-Powered Waterbody Description using GPS coordinates
 async function getWaterbodyDescription({ lat, lon }) {
   try {
-    // 1. Reverse geocode first
     const location = await reverseGeocode(lat, lon);
 
-    // 2. Create prompt
     const prompt = `
 You're given GPS coordinates:
 - Latitude: ${lat}
 - Longitude: ${lon}
-${console.log("Coordinates Given to GPT",lat,lon)}
 
 This is near or in the following location:
 - Country: ${location.country}
 - State: ${location.state}
 - City/Area: ${location.city}
 
-📝 Please describe the **nearest lake, reservoir, or waterbody or famous Landmark** to these coordinates.
-Include:
-- Its name (or best guess)
-- What country/state it's in
-- Why it's interesting or special
-- Fun facts, usage (fishing, tourism?), or historical/cultural value
-- Keep it 5-6 lines, simple and friendly to general users.
+📝 Please describe the **nearest lake, reservoir, waterbody, or famous landmark** near these coordinates.
 `;
 
-    // 3. Query OpenRouter
     const chat = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // or gpt-4 if allowed in OpenRouter
+      model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: "You are a helpful assistant with knowledge of geography and natural waterbodies." },
         { role: "user", content: prompt }
@@ -59,10 +61,19 @@ Include:
       temperature: 0.7,
     });
 
-    return {
-      location,
-      description: chat.choices[0].message.content.trim()
-    };
+    console.log("💬 Full API Response:", JSON.stringify(chat, null, 2)); // <-- PRINT full OpenRouter reply
+
+    if (!chat.choices || chat.choices.length === 0) {
+      throw new Error('No choices returned from OpenAI API');
+    }
+
+    const description = chat.choices[0].message.content.trim();
+
+    const GptDescription = { location, description };
+
+    console.log("🌊 Waterbody Info:", GptDescription);
+
+    return GptDescription;
 
   } catch (err) {
     console.error('🛑 Error in getWaterbodyDescription:', err.message);

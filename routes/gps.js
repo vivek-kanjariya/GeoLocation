@@ -22,6 +22,8 @@ router.get('/getinfo', (req, res) => {
 router.post('/gps', (req, res) => {
   const { lat, lon, timestamp } = req.body;
 
+  console.log('submitted by ESP:',req.body)
+
   // Validate the received GPS data
   if (!lat || !lon) {
     return res.status(400).json({ error: '❗ lat and lon are required' });
@@ -29,16 +31,16 @@ router.post('/gps', (req, res) => {
 
   // Store the new GPS data globally
   initialPosition = { lat, lon, timestamp };
-  console.log('📍 New GPS Received:', initialPosition);
+  console.log('Current GPS:', initialPosition);
 
   // Emit the coordinates to other listeners (services)
   gpsEmitter.emit('coordinatesUpdated', initialPosition);
 
   // Respond to the client
   res.json({
-    message: '✅ GPS received and sent to other services!',
+    message: 'GPS received and sent to other services!',
     position: initialPosition,
-    path: `🚤 Path planned near (${lat}, ${lon})`,
+    path: `Path planned near (${lat}, ${lon})`,
   });
 });
 

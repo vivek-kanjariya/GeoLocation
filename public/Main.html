@@ -2,183 +2,66 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" href="../Utils/map-location.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Waterbody & ESP32 Path Visualizer</title>
+  <title>Dashboard</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script src="./Main.js" defer></script>
+  <link rel="stylesheet" href="./main.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ol/6.14.1/ol.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol/6.14.1/ol.css" />
+
   
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600&display=swap" rel="stylesheet">
 
-  <style>
-    :root {
-      --primary: #0080ff;
-      --accent: #ff4e2f;
-      --bg: rgb(252, 255, 251);
-      --panel-bg: rgba(255, 255, 255, 0.2);
-      --text-color: #333;
-      --text-muted: #666;
-      --border-radius: 15px;
-      --map-color: #006ace;
-      --shadow: rgba(0, 0, 0, 0.25);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      height: 100%;
-      font-family: 'Poppins', sans-serif;
-      background: var(--bg);
-      color: var(--text-color);
-    }
-
-    body {
-      display: flex;
-      flex-direction: row;
-      overflow: hidden;
-    }
-
-    #map {
-      flex: 3;
-      height: 100vh;
-      border-radius: var(--border-radius) 0 0 var(--border-radius);
-      box-shadow: 0 4px 12px var(--shadow);
-      transition: all 0.3s ease;
-    }
-
-    #ai-description {
-      flex: 2;
-      padding: 2rem 1.5rem;
-      background: var(--panel-bg);
-      border-radius: 0 var(--border-radius) var(--border-radius) 0;
-      overflow-y: auto;
-      box-shadow: -3px 0 12px var(--shadow);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      backdrop-filter: blur(10px);
-    }
-
-    #ai-description h2 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      text-align: center;
-      color: #1500ff;
-      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    #ai-description p, #ai-description pre {
-      font-size: 1rem;
-      line-height: 1.7;
-      color: var(--text-muted);
-    }
-
-    #ai-description pre {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1rem;
-      border-radius: 8px;
-      margin-top: 1.2rem;
-      overflow-wrap: break-word;
-      white-space: pre-wrap;
-      color: white;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    #ai-description h3 {
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-    }
-
-    hr {
-      margin: 1rem 0;
-      border: none;
-      height: 1px;
-      background: #ddd;
-    }
-
-    .loading {
-      font-style: italic;
-      color: #aaa;
-    }
-
-    .loading::after {
-      content: '...';
-      animation: loading 1s infinite;
-    }
-
-    @keyframes loading {
-      0% { content: '.'; }
-      50% { content: '..'; }
-      100% { content: '...'; }
-    }
-
-    /* Aesthetic color grading and adjustments */
-    .leaflet-tile {
-      filter: brightness(0.95) contrast(1.2) saturate(1.1);
-    }
-
-    .leaflet-popup-content-wrapper {
-      background-color: var(--panel-bg);
-      border-radius: 12px;
-      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .leaflet-control-zoom {
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 50px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Hover Effects for Buttons and Elements */
-    .leaflet-control-zoom button:hover {
-      transform: scale(1.1);
-      transition: transform 0.3s;
-      background-color: var(--primary);
-      color: white;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 900px) {
-      body {
-        flex-direction: column;
-      }
-
-      #map{
-        width: 100%;
-        z-index: 200;
-      }
-
-      #ai-description {
-        background-color: rgba(244, 244, 244, 0.8);
-        box-shadow: none;
-        height: 30%;
-        bottom: 0;
-        border-radius: 12px;
-      }
-
-      #ai-description h2 {
-        font-size: 1.5rem;
-      }
-
-      #ai-description p, #ai-description pre {
-        font-size: 1.1rem;
-      }
-    }
-  </style>
+  
 </head>
 <body>
-
+  
   <div id="map"></div>
 
+  
   <div id="ai-description">
-    <h2>Description</h2>
+    <h2> <span style="color: chocolate; font-weight: 900; display: inline;;">|</span> Description</h2>
     <p id="ai-text" class="loading">Loading description from AI...</p>
+    <a href="./logs.html" style="
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      padding: 10px 16px;
+      background-color: var(--primary);
+      color: rgb(0, 0, 0);
+      text-align: center;
+      border-radius: 2px;
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-block;
+    ">View Server Console</a>
+
+<!-- GPS INPUTS  -->
+<form id="gpsForm">
+  <label>Latitude: <input type="number" step="any" id="lat" required></label><br>
+  <label>Longitude: <input type="number" step="any" id="lon" required></label><br>
+  <button id="CoodSubmitButton" type="submit">Send GPS Data</button>
+</form>
+
+
+
+<!-- <div id="Conditional-loader">
+  <input type="checkbox" name="checkbox" id="checkbox">
+  <label for="checkbox">Add more Probs</label>
+  <div id="Render">
+    <input type="text">
+    <input type="text">
+    <input type="button" value="Render" onclick="render()">
+  </div>
+</div> -->
+
+</div>
+
   </div>
 
   <!-- Leaflet JS -->
@@ -187,9 +70,16 @@
   <script>
     const map = L.map("map").setView([0, 0], 2);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 30,
-    }).addTo(map);
+  // CartoDB Tile Layer - Positron (Light Background)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19,
+    className: 'dark-theme'
+}).addTo(map);
+
+
+
+// https://api.maptiler.com/maps/0196671e-c3f6-7062-a329-46e5bba01c02/style.json?key=gTkB4eSEL1CKci6TZhVq
 
     let allBounds = [];
 
@@ -199,10 +89,10 @@
       .then((geojson) => {
         const waterLayer = L.geoJSON(geojson, {
           style: {
-            color: "#1E90FF",
-            weight: 20,
+            color: "#ff9e16e8",  // Yellow outline
+            weight: 4,
             fillOpacity: 0.6,
-            dashArray: "5, 5",
+            fillColor: "#1E90FF",  // Blue fill
           },
         }).addTo(map);
         allBounds.push(waterLayer.getBounds());
@@ -216,19 +106,19 @@
         const latlngs = pathData.map((pt) => [pt.lat, pt.lon]);
 
         const pathLine = L.polyline(latlngs, {
-          color: "#FF6347",
-          weight: 3,
+          color: "#ff9e16e8",  // Yellow path
+          weight: 2,
           opacity: 0.8,
-          dashArray: "10, 5",
+          dashArray: "7, 5",
         }).addTo(map);
 
         latlngs.forEach((coord, index) => {
           L.circleMarker(coord, {
-            radius: 6,
-            color: "#FF6347",
+            radius: 2,
+            color: "#0a4db9d3",  // Yellow markers
             fillColor: "white",
-            fillOpacity: 0.8,
-            weight: 4,
+            fillOpacity: 0.4,
+            weight: 2,
           }).addTo(map).bindTooltip(`WP ${index + 1}`);
         });
 
@@ -248,9 +138,12 @@
     fetch('/api/water-description')
       .then((res) => res.json())
       .then((data) => {
+        
+        console.log(data.location)
+
         const descObj = data.description || {};
         const location = descObj.location || {};
-        const aiText = descObj.description || "No AI description available.";
+        const aiText = descObj.description || "No AI description available";
 
         const locationHTML = location.display_name
           ? `<h3>📍 ${location.display_name}</h3>
@@ -266,7 +159,9 @@
         `;
       })
       .catch((err) => {
-        console.error("❌ Failed to load AI description:", err);
-        document.getElementById("ai-text").textContent = "❌ Failed to load AI description.";
+        console.error("Failed to load AI description:", err);
+        document.getElementById("ai-text").textContent = "AI  Pati  gyu :)";
       });
   </script>
+</body>
+</html>
